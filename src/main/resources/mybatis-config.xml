@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE configuration
+        PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
+        "https://mybatis.org/dtd/mybatis-3-config.dtd">
+<configuration>
+
+    <!--  配置顺序：
+    properties?,settings?,typeAliases?,typeHandlers?,
+    objectFactory?,objectWrapperFactory?,reflectorFactory?,
+    plugins?,environments?,databaseIdProvider?,mappers?.
+    -->
+
+
+    <properties resource="jdbc.properties"/>
+
+    <!-- 设置全局配置，将_自动映射为驼峰 -->
+    <settings>
+        <setting name="mapUnderscoreToCamelCase" value="true"/>
+    </settings>
+
+    <!-- 设置类型别名 -->
+    <typeAliases>
+<!--        <typeAlias type="com.mybatis.bean.User" alias="User"/>-->
+<!--        <typeAlias type="com.mybatis.bean.User"/>-->  <!-- alias:设置某个类型的别名，若不设置该属性，那么该类型拥有默认的别名，即类名且不区分大小写-->
+        <package name="com.mybatis.bean"/> <!--以包为单位，将包下所有的类型设置默认的类型别名，即类名且不区分大小写-->
+    </typeAliases>
+
+    <plugins>
+        <!--设置分页插件-->
+        <plugin interceptor="com.github.pagehelper.PageInterceptor"/>
+    </plugins>
+
+    <environments default="development">
+        <environment id="development">
+            <transactionManager type="JDBC"/>
+            <dataSource type="POOLED">
+                <property name="driver" value="${jdbc.driver}"/>
+                <property name="url" value="${jdbc.url}"/>
+                <property name="username" value="${jdbc.username}"/>
+                <property name="password" value="${jdbc.password}"/>
+            </dataSource>
+        </environment>
+    </environments>
+
+    <!-- 引入映射文件 -->
+    <mappers>
+<!--        <mapper resource="mappers/UserMapper.xml"/>-->
+<!--  以包为单位引入映射文件
+       要求:
+        1、mapper接口所在的包要和映射文件所在的包- -致
+        2、mapper接口要和映射文件的名字- -致
+-->
+        <package name="com.mybatis.mapper"/>
+    </mappers>
+</configuration>

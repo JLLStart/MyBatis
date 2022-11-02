@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.mybatis.mapper.EmpMapper">
+    <select id="getAllEmp" resultType="Emp">
+        select * from t_emp
+    </select>
+    
+    <resultMap id="EmpAndDeptResultMap" type="Emp">
+        <id property="eid" column="eid"/>
+        <result property="empName" column="emp_name"/>
+        <result property="age" column="age"/>
+        <result property="sex" column="sex"/>
+        <result property="email" column="email"/>
+<!--        <result property="dept.did" column="did"/>-->
+<!--        <result property="dept.deptName" column="dept_name"/>-->
+        <association property="dept" javaType="Dept">
+            <id property="did" column="did"/>
+            <result property="deptName" column="dept_name"/>
+        </association>
+    </resultMap>
+
+    <select id="getEmpAndDept" resultMap="EmpAndDeptResultMap">
+        SELECT
+            *
+        FROM
+            t_emp
+            LEFT JOIN t_dept ON t_emp.did = t_dept.did
+        WHERE
+            t_emp.did = 1
+    </select>
+
+    
+    <resultMap id="empAndDeptByStepResultMap" type="Emp">
+        <id property="eid" column="eid"/>
+        <result property="empName" column="emp_name"/>
+        <result property="age" column="age"/>
+        <result property="sex" column="sex"/>
+        <result property="email" column="email"/>
+        <association property="dept"
+                     select="com.mybatis.mapper.DeptMapper.getEmpAndDeptByStepTwo"
+                     column="did"/>
+    </resultMap>
+    <!-- Emp getEmpAndDeptByStepOne(@Param("eid") Integer eid); -->
+    <select id="getEmpAndDeptByStepOne" resultMap="empAndDeptByStepResultMap">
+        select * from t_emp where eid = #{eid}
+    </select>
+
+
+    <!-- 2、分步查询部门
+      Emp getDeptAndEmpByStepTwo(@Param("did") Integer did);
+     -->
+    <select id="getDeptAndEmpByStepTwo" resultType="Emp">
+        select * from t_emp where did = #{did}
+    </select>
+
+
+
+</mapper>

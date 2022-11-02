@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.mybatis.mapper.ParameterMapper">
+    <select id="getAllUser" resultType="User">
+        select * from t_user
+    </select>
+
+    <select id="getUserByUsername" resultType="User">
+        select * from t_user where username = #{username} limit 1
+    </select>
+
+<!--
+    2，mapper接口方法的参数为多个时
+    此时MyBatis会将这些参数放在一个map集 合中，以两种方式进行存储
+    a> 以argo, arg1...为键，以参数为值
+    b> 以param1, param2...为键，以参数为值
+-->
+    <select id="checkLogin" resultType="User">
+        select * from t_user where username = #{param1} and password = #{param2}
+    </select>
+
+<!--
+    4、mapper接口方法的参数是实体类类型的参数
+    只需要通过#{}和$ {左以属性的方式访问属性值即可，但是需要注意${}的单引号问题
+-->
+    <insert id="insertUser">
+        insert into t_user values(null,#{username},#{password},#{age},#{sex},#{email})
+    </insert>
+
+
+    <select id="checkLoginByParam" resultType="User">
+        select * from t_user where username = #{username} and password = #{password}
+    </select>
+
+
+</mapper>

@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.mybatis.mapper.DynamicSQLMapper">
+    <!--    List<Emp> getEmpByCondition(Emp emp)-->
+    <select id="getEmpByCondition" resultType="Emp">
+        select * from t_emp
+        <where>
+            <if test="empName != null and empName !=''">
+                and emp_name = #{empName}
+            </if>
+            <if test="age != null and age !=''">
+                and age = #{age}
+            </if>
+            <if test="sex != null and sex !=''">
+                and sex = #{sex}
+            </if>
+        </where>
+    </select>
+
+    <!--    List<Emp> getEmpByChoose(Emp emp)
+           这里的when相对于switch...case...default
+     -->
+    <select id="getEmpByChoose" resultType="Emp">
+        select * from t_emp
+        <where>
+            <choose>
+                <when test="empName != null and empName !=''">
+                    emp_name = #{empName}
+                </when>
+                <when test="age != null and age !=''">
+                    age = #{age}
+                </when>
+                <otherwise>
+                    sex = #{sex}
+                </otherwise>
+            </choose>
+        </where>
+    </select>
+
+
+<!--    int deleteMoreByArray(@Param("eids") Integer[] eids)-->
+    <delete id="deleteMoreByArray">
+        delete from t_emp where eid in
+            <foreach collection="eids" index="eid" separator="," open="(" close=")">
+                #{eid}
+            </foreach>
+    </delete>
+</mapper>
